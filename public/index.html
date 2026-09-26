@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1d4ed8">
+<title>Quản Lý Bán Hàng · 销售管理</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231d4ed8'/><path d='M26 34h48l-6 30H32z' fill='none' stroke='white' stroke-width='7' stroke-linejoin='round'/><circle cx='38' cy='76' r='6' fill='white'/><circle cx='62' cy='76' r='6' fill='white'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="side-head">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18l-2 11H5L3 6z"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 6L2 3H1"/></svg>
+    </div>
+    <div class="logo-text">
+      <strong id="shopTitle">—</strong>
+      <span id="sideSub">—</span>
+    </div>
+  </div>
+  <nav class="nav" id="nav">
+    <button class="nav-item active" data-page="dashboard"><span class="ni"></span><em data-i18n="nav_dashboard">Tổng quan</em></button>
+    <button class="nav-item" data-page="products"><span class="ni"></span><em data-i18n="nav_products">Sản phẩm</em></button>
+    <button class="nav-item" data-page="batch"><span class="ni"></span><em data-i18n="nav_batch">Lô hàng</em></button>
+    <button class="nav-item" data-page="sell"><span class="ni"></span><em data-i18n="nav_sell">Bán hàng</em></button>
+    <button class="nav-item" data-page="stock"><span class="ni"></span><em data-i18n="nav_stock">Tồn kho</em></button>
+    <button class="nav-item" data-page="debt"><span class="ni"></span><em data-i18n="nav_debt">Công nợ</em></button>
+    <button class="nav-item" data-page="money"><span class="ni"></span><em data-i18n="nav_money">Thu chi</em></button>
+    <button class="nav-item" data-page="report"><span class="ni"></span><em data-i18n="nav_report">Báo cáo</em></button>
+    <button class="nav-item owner-only" data-page="staff"><span class="ni"></span><em data-i18n="nav_staff">Nhân viên</em></button>
+    <button class="nav-item" data-page="settings"><span class="ni"></span><em data-i18n="nav_settings">Cài đặt</em></button>
+  </nav>
+  <div class="side-foot">
+    <div class="me-box" id="meBox">
+      <div class="me-avatar" id="meAvatar">?</div>
+      <div class="me-info">
+        <strong id="meName">—</strong>
+        <span id="meRole">—</span>
+      </div>
+      <button class="icon-btn sm" id="btnLogout" title="Đăng xuất"><span id="logoutIcon"></span></button>
+    </div>
+    <button class="lang-toggle" id="langToggle">
+      <span class="lt-icon"></span>
+      <span id="langLabel">中文</span>
+    </button>
+  </div>
+</aside>
+
+<div class="scrim" id="scrim"></div>
+
+<main class="main">
+  <header class="topbar">
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"></button>
+    <h1 class="page-title" id="pageTitle">—</h1>
+    <div class="top-right">
+      <button class="lang-toggle-sm" id="langToggleSm">中文 / VI</button>
+    </div>
+  </header>
+
+  <div class="content" id="content">
+
+    <section class="page active" id="page-dashboard">
+      <div class="stats" id="dashStats"></div>
+      <div class="card">
+        <div class="card-head"><h2 data-i18n="dash_quick">Thao tác nhanh</h2></div>
+        <div class="quick-grid">
+          <button class="quick-btn" data-goto="batch"><span class="qic"></span><em data-i18n="add_batch">Tạo lô hàng</em></button>
+          <button class="quick-btn" data-goto="products"><span class="qic"></span><em data-i18n="add_product">Thêm sản phẩm</em></button>
+          <button class="quick-btn" data-goto="sell"><span class="qic"></span><em data-i18n="sell">Bán hàng</em></button>
+          <button class="quick-btn" data-goto="debt"><span class="qic"></span><em data-i18n="nav_debt">Công nợ</em></button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2 data-i18n="stock_warning">Cảnh báo tồn kho</h2></div>
+        <div id="dashWarn"></div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h2 data-i18n="dash_recent">Giao dịch gần đây</h2>
+          <button class="link-btn" data-goto="report" data-i18n="nav_report">Báo cáo</button>
+        </div>
+        <div id="dashRecent"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-products">
+      <div class="toolbar">
+        <div class="search-box"><span class="si"></span><input type="text" id="prodSearch" data-i18n-ph="search" placeholder="Tìm kiếm"></div>
+        <button class="btn primary" id="btnAddProduct"><span class="bi"></span><em data-i18n="add">Thêm</em></button>
+      </div>
+      <div class="card no-pad"><div id="prodList"></div></div>
+    </section>
+
+    <section class="page" id="page-batch">
+      <div class="card">
+        <div class="card-head">
+          <h2 data-i18n="batches">Lô hàng</h2>
+          <button class="btn primary sm" id="btnAddBatch"><span class="bi"></span><em data-i18n="add_batch">Tạo lô hàng</em></button>
+        </div>
+        <p class="hint" data-i18n="batch_hint" style="margin-top:0;margin-bottom:10px"></p>
+        <div id="batchList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-sell">
+      <div class="card">
+        <div class="card-head">
+          <h2 data-i18n="product">Sản phẩm</h2>
+          <div class="search-box small"><span class="si"></span><input type="text" id="sellSearch" data-i18n-ph="search" placeholder="Tìm kiếm"></div>
+        </div>
+        <div class="sell-picker" id="sellPicker"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2 data-i18n="cart">Giỏ hàng</h2><span class="pill" id="cartCount">0</span></div>
+        <div id="cartBox"></div>
+        <div class="cart-foot" id="cartFoot" hidden>
+          <div class="row2">
+            <div class="field"><label data-i18n="customer">Khách hàng</label><select id="sellCustomer"></select></div>
+            <div class="field"><label data-i18n="discount">Giảm giá</label><input type="number" id="sellDiscount" min="0" step="1" value="0"></div>
+          </div>
+          <div class="sum-row"><span data-i18n="total">Tổng</span><strong id="cartSubtotal">0</strong></div>
+          <div class="sum-row grand"><span data-i18n="grand_total">Tổng cộng</span><strong id="cartTotal">0</strong></div>
+          <div class="field"><label data-i18n="paid_now_sell">Khách trả ngay</label><input type="number" id="sellPaid" min="0" step="1" value="0"></div>
+          <div class="sum-row"><span data-i18n="remaining_debt">Còn nợ lại</span><strong id="cartDebt" class="debt-val">0</strong></div>
+          <button class="btn primary full" id="btnCheckout"><span class="bi"></span><em data-i18n="checkout">Thanh toán</em></button>
+        </div>
+      </div>
+      <div class="card no-pad">
+        <div class="card-head pad"><h2 data-i18n="sell_history">Lịch sử bán hàng</h2></div>
+        <div id="sellList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-stock">
+      <div class="stats" id="stockStats"></div>
+      <div class="card">
+        <div class="card-head">
+          <h2 data-i18n="stock_now">Tồn hiện tại</h2>
+          <div class="search-box small"><span class="si"></span><input type="text" id="stockSearch" data-i18n-ph="search" placeholder="Tìm kiếm"></div>
+        </div>
+        <div id="stockList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-debt">
+      <div class="seg" id="debtTab">
+        <button type="button" class="seg-btn active" data-tab="customer"><span class="bi"></span><em data-i18n="debt_receivable">Khách nợ mình</em></button>
+        <button type="button" class="seg-btn" data-tab="supplier"><span class="bi"></span><em data-i18n="debt_payable">Mình nợ NCC</em></button>
+      </div>
+      <div class="stats" id="debtStats"></div>
+      <div class="card">
+        <div class="card-head">
+          <h2 id="debtListTitle" data-i18n="debt_detail">Chi tiết công nợ</h2>
+          <div class="chip-row" id="debtFilter">
+            <button class="chip" data-df="all" data-i18n="all">Tất cả</button>
+            <button class="chip active" data-df="debt" data-i18n="only_debt">Chỉ người còn nợ</button>
+          </div>
+        </div>
+        <div id="debtList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-money">
+      <div class="stats" id="moneyStats"></div>
+      <div class="card">
+        <div class="card-head"><h2 data-i18n="money_add">Ghi thu chi</h2></div>
+        <form class="form" id="moneyForm">
+          <div class="seg" id="moneyTypeSeg">
+            <button type="button" class="seg-btn active" data-type="in"><span class="bi"></span><em data-i18n="income">Thu vào</em></button>
+            <button type="button" class="seg-btn" data-type="out"><span class="bi"></span><em data-i18n="expense">Chi ra</em></button>
+          </div>
+          <div class="row2">
+            <div class="field"><label data-i18n="money_amount">Số tiền</label><input type="number" id="moneyAmount" min="1" step="1" required></div>
+            <div class="field"><label data-i18n="money_category">Danh mục</label><select id="moneyCategory"></select></div>
+          </div>
+          <div class="field"><label data-i18n="money_desc">Nội dung</label><input type="text" id="moneyDesc"></div>
+          <div class="field"><label data-i18n="date">Ngày</label><input type="date" id="moneyDate"></div>
+          <button type="submit" class="btn primary full"><span class="bi"></span><em data-i18n="save">Lưu</em></button>
+        </form>
+      </div>
+      <div class="card no-pad">
+        <div class="card-head pad">
+          <h2 data-i18n="money">Thu chi</h2>
+          <div class="chip-row" id="moneyFilter">
+            <button class="chip active" data-mf="all" data-i18n="all">Tất cả</button>
+            <button class="chip" data-mf="in" data-i18n="income">Thu vào</button>
+            <button class="chip" data-mf="out" data-i18n="expense">Chi ra</button>
+          </div>
+        </div>
+        <div id="moneyList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-report">
+      <div class="chip-row pad-x" id="reportRange">
+        <button class="chip" data-r="today" data-i18n="today">Hôm nay</button>
+        <button class="chip active" data-r="7d" data-i18n="report_7d">7 ngày</button>
+        <button class="chip" data-r="30d" data-i18n="report_30d">30 ngày</button>
+        <button class="chip" data-r="90d" data-i18n="report_90d">90 ngày</button>
+        <button class="chip" data-r="all" data-i18n="report_all">Tất cả</button>
+      </div>
+      <div class="stats" id="reportStats"></div>
+      <div class="card">
+        <div class="card-head"><h2 data-i18n="top_products">Sản phẩm bán chạy</h2></div>
+        <div id="reportTop"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2 data-i18n="report">Báo cáo</h2></div>
+        <div id="reportTable"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-staff">
+      <div class="card">
+        <div class="card-head">
+          <h2 data-i18n="staff_list">Danh sách nhân viên</h2>
+          <button class="btn primary sm" id="btnAddStaff"><span class="bi"></span><em data-i18n="add_staff">Thêm nhân viên</em></button>
+        </div>
+        <p class="hint" data-i18n="staff_hint" style="margin-top:0;margin-bottom:12px"></p>
+        <div id="staffList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-settings">
+      <div class="card">
+        <div class="card-head"><h2 data-i18n="shop_name">Tên cửa hàng</h2></div>
+        <form class="form" id="shopForm">
+          <div class="field"><label data-i18n="shop_name">Tên cửa hàng</label><input type="text" id="shopNameInput"></div>
+          <div class="row2">
+            <div class="field"><label data-i18n="language">Ngôn ngữ</label><select id="setLang"><option value="vi">Tiếng Việt</option><option value="zh">中文</option></select></div>
+            <div class="field"><label data-i18n="currency">Tiền tệ</label><select id="setCurrency"><option value="VND">VNĐ (₫)</option><option value="CNY">人民币 (¥)</option></select></div>
+          </div>
+          <div class="field"><label data-i18n="shop_phone">Số điện thoại</label><input type="tel" id="shopPhone"></div>
+          <div class="field"><label data-i18n="shop_address">Địa chỉ</label><input type="text" id="shopAddress"></div>
+          <div class="field"><label data-i18n="tax_code">Mã số thuế</label><input type="text" id="shopTax"></div>
+          <div class="field"><label data-i18n="slogan">Lời cảm ơn / khẩu hiệu</label><input type="text" id="shopSlogan" placeholder="Cảm ơn quý khách!"></div>
+          <p class="hint" data-i18n="shop_info_hint">Thông tin này sẽ in trên hoá đơn</p>
+          <button type="submit" class="btn primary full"><em data-i18n="save">Lưu</em></button>
+        </form>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2 data-i18n="my_account">Tài khoản</h2></div>
+        <div id="accountInfo"></div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="auth-screen" id="authScreen">
+  <div class="auth-bg"></div>
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="auth-logo">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18l-2 11H5L3 6z"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 6L2 3H1"/></svg>
+      </div>
+      <h1 data-i18n="app_name">Quản Lý Bán Hàng</h1>
+      <p data-i18n="app_sub">Kho hàng · Thu chi</p>
+    </div>
+
+    <form class="auth-form" id="loginForm">
+      <h2 data-i18n="login_sub">Đăng nhập để quản lý cửa hàng</h2>
+      <div class="field"><label data-i18n="username">Tên đăng nhập</label><input type="text" id="lgUsername" autocomplete="username" required></div>
+      <div class="field"><label data-i18n="password">Mật khẩu</label><input type="password" id="lgPassword" autocomplete="current-password" required></div>
+      <button type="submit" class="btn primary full" id="lgBtn"><em data-i18n="login">Đăng nhập</em></button>
+      <p class="auth-switch"><span data-i18n="no_account">Chưa có tài khoản?</span> <button type="button" class="link-btn" id="goRegister" data-i18n="register_now">Đăng ký ngay</button></p>
+    </form>
+
+    <form class="auth-form" id="registerForm" hidden>
+      <h2 data-i18n="register_sub">Tạo cửa hàng mới</h2>
+      <div class="field"><label data-i18n="shop_name">Tên cửa hàng</label><input type="text" id="rgShop" required></div>
+      <div class="field"><label data-i18n="display_name">Tên hiển thị</label><input type="text" id="rgDisplay"></div>
+      <div class="field"><label data-i18n="username">Tên đăng nhập</label><input type="text" id="rgUsername" autocomplete="username" required></div>
+      <div class="field"><label data-i18n="password">Mật khẩu</label><input type="password" id="rgPassword" autocomplete="new-password" required></div>
+      <button type="submit" class="btn primary full" id="rgBtn"><em data-i18n="register">Đăng ký</em></button>
+      <p class="auth-switch"><span data-i18n="have_account">Đã có tài khoản?</span> <button type="button" class="link-btn" id="goLogin" data-i18n="login_now">Đăng nhập ngay</button></p>
+    </form>
+
+    <div class="auth-lang"><button class="lang-toggle-sm" id="authLang">中文 / Tiếng Việt</button></div>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-box" id="modalBox">
+    <div class="modal-head">
+      <h3 id="modalTitle">—</h3>
+      <button class="icon-btn" id="modalClose" aria-label="Close"></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="loading-overlay" id="appLoading" hidden><div class="spinner"></div></div>
+
+<script src="js/i18n.js"></script>
+<script src="js/icon.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/print.js"></script>
+</body>
+</html>
