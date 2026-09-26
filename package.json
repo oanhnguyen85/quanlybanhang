@@ -1,0 +1,8 @@
+{
+  "name": "qlbh-online",
+  "version": "2.0.0",
+  "description": "Quan ly ban hang - lo hang, gia von, cong no",
+  "main": "server/index.js",
+  "scripts": { "start": "node server/index.js" },
+  "engines": { "node": ">=18" }
+}
